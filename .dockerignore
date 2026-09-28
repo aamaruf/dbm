@@ -1,5 +1,5 @@
 # ==============================================================================
-# PostgreSQL Backup Manager - Docker Ignore File
+# DB Backup Manager - Docker Ignore File
 # ==============================================================================
 # This file specifies which files and directories should be excluded from
 # the Docker build context to reduce image size and build time.
@@ -33,7 +33,11 @@ backups/
 *.sql
 *.sql.gz
 *.dump
+*.archive
 *.backup
+
+# Saved connections (plain-text passwords) must never be baked into an image
+data/
 
 # ==============================================================================
 # Logs

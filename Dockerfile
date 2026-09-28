@@ -1,8 +1,6 @@
 # ==================== STAGE 1: Dependencies ====================
 FROM node:20-alpine AS deps
 
-RUN apk add --no-cache postgresql-client
-
 WORKDIR /app
 
 # Copy package files
@@ -15,6 +13,12 @@ RUN if [ -f yarn.lock ]; then yarn install --production --frozen-lockfile; \
 
 # ==================== STAGE 2: Runner ====================
 FROM node:20-alpine AS runner
+
+LABEL org.opencontainers.image.title="DB Backup Manager" \
+      org.opencontainers.image.description="Backup and restore PostgreSQL, MySQL and MongoDB databases to local disk or S3-compatible storage" \
+      org.opencontainers.image.source="https://github.com/aamaruf/dbm" \
+      org.opencontainers.image.url="https://github.com/aamaruf/dbm" \
+      org.opencontainers.image.licenses="MIT"
 
 # Install database client tools (PostgreSQL, MySQL/MariaDB, MongoDB) and curl for healthcheck
 RUN apk add --no-cache postgresql-client mariadb-client mongodb-tools curl
@@ -40,8 +44,13 @@ RUN mkdir -p /app/backups /app/logs /app/data && \
 USER nodejs
 
 # Environment variables (defaults, can be overridden at runtime)
-ENV NODE_ENV=production
-ENV PORT=7050
+ENV NODE_ENV=production \
+    PORT=7050 \
+    BACKUP_LOCAL_PATH=/app/backups \
+    DATA_DIR=/app/data
+
+# Backups, logs and saved connections live outside the image
+VOLUME ["/app/backups", "/app/logs", "/app/data"]
 
 # Expose port
 EXPOSE 7050

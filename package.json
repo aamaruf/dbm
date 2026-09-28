@@ -14,11 +14,25 @@
     "postgresql",
     "mysql",
     "mongodb",
+    "supabase",
     "backup",
+    "database-backup",
+    "restore",
     "s3"
   ],
   "author": "S.M. Khalid Mahmud <https://github.com/khalidccnu>",
   "license": "MIT",
+  "homepage": "https://github.com/aamaruf/dbm#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamaruf/dbm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aamaruf/dbm/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "aws-sdk": "^2.1498.0",
     "compression": "^1.7.4",

@@ -536,7 +536,7 @@ POST /api/config/manual/s3
   "secretAccessKey": "your-secret-key",
   "region": "us-east-1",
   "bucket": "my-backups",
-  "prefix": "postgres/",
+  "prefix": "db-backups/",
   "endpoint": "https://s3.amazonaws.com",
   "s3ForcePathStyle": false
 }
@@ -583,7 +583,7 @@ GET /api/storage/config
       "secretAccessKey": "********",
       "region": "us-east-1",
       "bucket": "my-backups",
-      "prefix": "postgres/",
+      "prefix": "db-backups/",
       "endpoint": "",
       "s3ForcePathStyle": false
     }
@@ -605,7 +605,7 @@ POST /api/storage/config
   "secretAccessKey": "your-secret-key",
   "region": "us-east-1",
   "bucket": "my-backups",
-  "prefix": "postgres/",
+  "prefix": "db-backups/",
   "endpoint": "https://s3.amazonaws.com",
   "s3ForcePathStyle": false
 }

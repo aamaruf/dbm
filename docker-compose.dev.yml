@@ -1,0 +1,79 @@
+# Contributor / demo stack: sample databases to back up and restore.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#
+# Add these connections in the UI (http://localhost:7050):
+#
+#   Type        Host      Port   User   Password   Database
+#   PostgreSQL  postgres  5432   dbm    dbm        demo
+#   MySQL       mysql     3306   dbm    dbm        demo
+#   MongoDB     mongo     27017  dbm    dbm        demo   (Auth Source: admin)
+#
+# The databases are also published on localhost (15432, 13306, 27018) for
+# running the app outside Docker. Demo credentials only; never use in production.
+
+services:
+  dbm:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dbm
+      POSTGRES_PASSWORD: dbm
+      POSTGRES_DB: demo
+    ports:
+      - "15432:5432"
+    volumes:
+      - dev_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dbm -d demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mysql:
+    image: mysql:8.4
+    # The MariaDB client in the dbm image can't do caching_sha2_password over a non-TLS connection
+    command: ["--mysql-native-password=ON", "--authentication-policy=mysql_native_password"]
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dbm
+      MYSQL_PASSWORD: dbm
+      MYSQL_DATABASE: demo
+    ports:
+      - "13306:3306"
+    volumes:
+      - dev_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dbm
+      MONGO_INITDB_ROOT_PASSWORD: dbm
+      MONGO_INITDB_DATABASE: demo
+    ports:
+      - "27018:27017"
+    volumes:
+      - dev_mongo:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  dev_postgres:
+  dev_mysql:
+  dev_mongo:

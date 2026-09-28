@@ -1,732 +1,344 @@
 # Installation Guide
 
-Complete step-by-step installation instructions for PostgreSQL Backup Manager.
+This guide covers installing, running and verifying **DB Backup Manager** with Docker or directly with Node.js, connecting your databases (including Supabase), and fixing common problems.
 
-## Table of Contents
+## Table of contents
 
-1. [Prerequisites](#prerequisites)
-2. [Docker Installation (Recommended)](#docker-installation-recommended)
-3. [Local Installation](#local-installation)
-4. [Configuration](#configuration)
-5. [First Run](#first-run)
-6. [Verification](#verification)
-7. [Troubleshooting](#troubleshooting)
-
----
-
-## Prerequisites
-
-### For Docker Installation
-
-- Docker 20.10+ ([Install Docker](https://docs.docker.com/get-docker/))
-- Docker Compose 2.0+ (included with Docker Desktop)
-- 500MB free disk space (minimum)
-- PostgreSQL database (local or remote)
-
-### For Local Installation
-
-- Node.js 20 LTS or higher ([Download](https://nodejs.org/))
-- PostgreSQL client tools (pg_dump, psql)
-- 200MB free disk space (minimum)
-- PostgreSQL database (local or remote)
+- [Choose an installation method](#choose-an-installation-method)
+- [Docker installation (recommended)](#docker-installation-recommended)
+- [Local installation](#local-installation)
+- [Dev stack with sample databases](#dev-stack-with-sample-databases)
+- [First run](#first-run)
+- [Supabase setup](#supabase-setup)
+- [S3-compatible storage setup](#s3-compatible-storage-setup)
+- [Updating](#updating)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## Docker Installation (Recommended)
+## Choose an installation method
 
-### Step 1: Clone or Download Project
+| | Docker | Local (Node.js) |
+| --- | --- | --- |
+| Client tools | All included (PostgreSQL, MySQL/MariaDB, MongoDB) | Install the ones you need |
+| Requirements | Docker 20.10+ with Compose v2 | Node.js 20+, Yarn or npm |
+| Best for | Servers, NAS, homelabs | Development, or hosts without Docker |
 
-**Option A: Using Git**
+---
+
+## Docker installation (recommended)
+
+### 1. Get the code
 
 ```bash
-git clone <repository-url>
-cd postgres-backup
+git clone https://github.com/aamaruf/dbm.git
+cd dbm
 ```
 
-**Option B: Download ZIP**
+### 2. (Optional) Create a `.env`
 
-1. Download the project ZIP file
-2. Extract to a directory
-3. Open terminal in that directory
-
-### Step 2: Create Environment File
+You don't need one. Connections are added from the UI. Create a `.env` only if you want S3 storage, an auto-backup schedule, or a pinned **Default** PostgreSQL connection:
 
 ```bash
-# Copy example to .env
 cp .env.example .env
-
-# Or on Windows
-copy .env.example .env
 ```
 
-### Step 3: Edit Configuration
+Docker Compose reads `.env` automatically. See the [configuration table](README.md#%EF%B8%8F-configuration) for every variable.
 
-Open `.env` in your favorite text editor and update:
-
-```env
-# REQUIRED: Your database credentials
-DB_HOST=your-database-host.com
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_secure_password
-DB_NAME=postgres
-```
-
-**Examples:**
-
-**Supabase Database:**
-
-```env
-DB_HOST=db.abcdefghijklmn.supabase.co
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_supabase_password
-DB_NAME=postgres
-```
-
-**AWS RDS:**
-
-```env
-DB_HOST=mydb.123456789.us-east-1.rds.amazonaws.com
-DB_PORT=5432
-DB_USER=admin
-DB_PASSWORD=your_rds_password
-DB_NAME=myapp
-```
-
-**Local Database:**
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_NAME=mydb
-```
-
-### Step 4: Build and Start
+### 3. Build and start
 
 ```bash
-# Build the Docker image
-docker compose build
-
-# Start the application
-docker compose up -d
+docker compose up -d --build
 ```
 
-**Expected output:**
-
-```
-[+] Building 45.2s (12/12) FINISHED
-[+] Running 2/2
- ✔ Network postgres-backup_default          Created
- ✔ Container postgres-backup-manager        Started
-```
-
-### Step 5: Verify Installation
+### 4. Verify
 
 ```bash
-# Check container is running
-docker compose ps
-
-# View logs
-docker compose logs -f
-
-# Test health endpoint
-curl http://localhost:7050/health
+docker compose ps                     # dbm should be "healthy"
+docker compose logs -f dbm            # "DB Backup Manager running on http://localhost:7050"
+curl http://localhost:7050/health     # {"status":"ok",...}
 ```
 
-**Expected health response:**
+### 5. Open the app
 
-```json
-{ "status": "ok", "timestamp": "2025-11-04T10:30:00.000Z" }
-```
+Go to **http://localhost:7050**. To use a different host port, set `HOST_PORT=8080` in `.env`.
 
-### Step 6: Access Application
+### Volumes
 
-Open your browser and navigate to:
+| Volume | Mounted at | Contents |
+| --- | --- | --- |
+| `backup_data` | `/app/backups` | Backup files, one folder per connection |
+| `connection_data` | `/app/data` | `connections.json` (saved connections, plain-text passwords) |
+| `log_data` | `/app/logs` | Application logs and the operation timeline |
 
-```
-http://localhost:7050
-```
-
-You should see the PostgreSQL Backup Manager interface! 🎉
-
----
-
-## Local Installation
-
-### Step 1: Install Prerequisites
-
-**Ubuntu/Debian:**
+The container runs as a non-root user (UID `1001`). If you replace the named volumes with host folders, give that user ownership first:
 
 ```bash
-# Update package list
-sudo apt-get update
-
-# Install Node.js 20 LTS
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Install PostgreSQL client tools
-sudo apt-get install -y postgresql-client
-
-# Verify installations
-node --version   # Should show v20.x.x
-yarn --version   # Should show 1.x.x or 4.x.x
-pg_dump --version  # Should show PostgreSQL version
+mkdir -p ./backups ./data ./logs && sudo chown -R 1001:1001 ./backups ./data ./logs
 ```
 
-**macOS:**
+### Plain `docker run`
 
 ```bash
-# Install Homebrew if not already installed
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install Node.js
-brew install node@20
-
-# Install Yarn
-npm install -g yarn
-
-# Install PostgreSQL client tools
-brew install postgresql
-
-# Verify installations
-node --version
-yarn --version
-pg_dump --version
-```
-
-**Windows:**
-
-1. **Install Node.js:**
-
-   - Download from https://nodejs.org/
-   - Run installer (choose LTS version)
-   - Verify: Open CMD and run `node --version`
-
-2. **Install PostgreSQL Client Tools:**
-   - Download from https://www.postgresql.org/download/windows/
-   - Run installer
-   - Select only "Command Line Tools"
-   - Add to PATH during installation
-   - Verify: Open CMD and run `pg_dump --version`
-
-### Step 2: Download Project
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd postgres-backup
-
-# Or download and extract ZIP, then navigate to folder
-```
-
-### Step 3: Install Dependencies
-
-```bash
-# Install Node.js packages
-yarn install
-```
-
-**Expected output:**
-
-```
-[1/4] Resolving packages...
-[2/4] Fetching packages...
-[3/4] Linking dependencies...
-[4/4] Building fresh packages...
-success Saved lockfile.
-Done in 12.34s
-
-found 0 vulnerabilities
-```
-
-### Step 4: Configure Environment
-
-```bash
-# Create .env file
-cp .env.example .env
-
-# Edit .env with your database credentials
-nano .env  # or use any text editor
-```
-
-Update the database configuration:
-
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_NAME=postgres
-```
-
-### Step 5: Start Application
-
-```bash
-# Start the server
-yarn start
-```
-
-**Expected output:**
-
-```
-PostgreSQL Backup Manager running on http://localhost:7050
-Environment: development
-```
-
-### Step 6: Access Application
-
-Open your browser and go to:
-
-```
-http://localhost:7050
+docker build -t dbm .
+docker run -d --name dbm -p 7050:7050 \
+  -v dbm_backups:/app/backups \
+  -v dbm_data:/app/data \
+  -v dbm_logs:/app/logs \
+  dbm
 ```
 
 ---
 
-## Configuration
+## Local installation
 
-### Basic Configuration
+### 1. Install Node.js 20+
 
-Minimum required configuration in `.env`:
+- **Ubuntu/Debian**
+  ```bash
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+  sudo npm install -g yarn
+  ```
+- **macOS**
+  ```bash
+  brew install node@20 yarn
+  ```
+- **Windows**: install from [nodejs.org](https://nodejs.org/). Using **WSL 2** with the Ubuntu steps is recommended.
 
-```env
-DB_HOST=your-database-host
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_NAME=postgres
+### 2. Install the client tools you need
+
+You only need the tools for the database types you plan to use.
+
+| Database | Ubuntu / Debian | macOS (Homebrew) | Windows |
+| --- | --- | --- | --- |
+| PostgreSQL | `sudo apt-get install postgresql-client` | `brew install postgresql` | [PostgreSQL installer](https://www.postgresql.org/download/windows/) (Command Line Tools) |
+| MySQL | `sudo apt-get install mysql-client` (or `mariadb-client`) | `brew install mysql-client` | [MySQL Installer](https://dev.mysql.com/downloads/installer/) (MySQL Shell/Client) |
+| MongoDB | [Database Tools .deb](https://www.mongodb.com/try/download/database-tools) | `brew tap mongodb/brew && brew install mongodb-database-tools` | [Database Tools .msi](https://www.mongodb.com/try/download/database-tools) |
+
+Check that the tools are available:
+
+```bash
+pg_dump --version && psql --version && pg_restore --version
+mysqldump --version && mysql --version
+mongodump --version && mongorestore --version
 ```
 
-### Advanced Configuration
+> Use a PostgreSQL client that is the **same major version or newer** than your server. An older `pg_dump` refuses to dump a newer server.
+>
+> Homebrew's `mysql-client` and `postgresql` are keg-only. Add them to your `PATH` as `brew info` describes.
 
-#### Configuration Mode
+### 3. Install and run
 
-Choose between ENV (environment variables) or Manual (API-based) configuration:
-
-```env
-CONFIG_MODE=env  # Default: use .env file (requires restart for changes)
+```bash
+git clone https://github.com/aamaruf/dbm.git
+cd dbm
+yarn install              # or: npm install
+cp .env.example .env      # optional
+yarn start                # production mode
 # or
-CONFIG_MODE=manual  # Use API to configure at runtime (no restart needed)
+yarn dev                  # development mode
 ```
 
-**ENV Mode (Recommended for Production):**
+You can also run the interactive helper: `./setup.sh` (Linux/macOS) or `setup.bat` (Windows). It reports which client tools are missing.
 
-- Configuration loaded from .env file
-- Changes require application restart
-- Best for infrastructure-as-code deployments
+Open **http://localhost:7050**.
 
-**Manual Mode (Development/Testing):**
+---
 
-- Configuration set via API calls
-- Changes take effect immediately
-- Stored in memory (resets on restart)
-- Use endpoints: `/api/config/manual/database`, `/api/config/manual/backup`, `/api/config/manual/s3`
+## Dev stack with sample databases
 
-#### Enable Auto-Backup
+`docker-compose.dev.yml` adds throwaway PostgreSQL 16, MySQL 8.4 and MongoDB 7 servers, which makes it easy to try the app or develop against real engines.
 
-```env
-BACKUP_AUTO=true
-BACKUP_SCHEDULE=0 2 * * *  # Daily at 2 AM
-BACKUP_RETENTION_DAYS=7
-BACKUP_FORMAT=sql          # sql or dump
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
-#### Configure Database Schema & Exclusions
+| Type | Host (app in Docker) | Host (app on your machine) | User / Password | Database |
+| --- | --- | --- | --- | --- |
+| PostgreSQL | `postgres:5432` | `localhost:15432` | `dbm` / `dbm` | `demo` |
+| MySQL | `mysql:3306` | `localhost:13306` | `dbm` / `dbm` | `demo` |
+| MongoDB | `mongo:27017` | `localhost:27018` | `dbm` / `dbm` (Auth Source `admin`) | `demo` |
 
-```env
-DB_SCHEMA=public                        # Optional: specific schema
-DB_EXCLUDE_TABLES=migrations,sessions   # Optional: exclude tables
+To start only the databases and run the app with `yarn dev`:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d postgres mysql mongo
 ```
 
-#### Configure S3 Storage
+To stop everything and delete the sample data:
 
-**AWS S3:**
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml down -v
+```
+
+> These credentials are for demos only. Never expose the dev stack publicly.
+
+---
+
+## First run
+
+1. **Add a connection.** Click **Add Connection**, choose the type, fill in the fields, then click **Test Connection** and **Save Connection**.
+2. **Create a backup.** Click **Backup** on the connection row. The file appears in *Recent Backups* and under `backups/<connectionId>/` (in Docker, inside the `backup_data` volume):
+   ```bash
+   ls backups/*/                                     # local install
+   docker compose exec dbm ls -R /app/backups        # Docker
+   ```
+3. **Restore.** Click **Restore** on a row, choose the source connection and the backup file, then confirm. Try it on a non-production database first.
+4. **(Optional) Turn on Auto-Backup.** Use the toggle in the header. In ENV mode it's controlled by `BACKUP_AUTO` and `BACKUP_SCHEDULE`. Switch to Manual mode to change it from the UI.
+
+### Optional: the Default connection
+
+If `DB_HOST` (and the other `DB_*` variables) are set, that PostgreSQL database appears as a pinned **Default (ENV)** connection. In Manual mode you edit it under **Configure → Database**. You can't delete it from the list, and its backups are stored in `backups/default/`.
+
+---
+
+## Supabase setup
+
+Supabase is PostgreSQL, so you add it as a **PostgreSQL** connection.
+
+1. In the Supabase dashboard, open **Project Settings → Database → Connection string** and choose **Session pooler**.
+2. Copy these values into **Add Connection** with type *PostgreSQL*:
+
+   | Field | Value |
+   | --- | --- |
+   | Title | e.g. `Supabase – production` |
+   | Host | `aws-0-<region>.pooler.supabase.com` |
+   | Port | `5432` |
+   | Username | `postgres.<project-ref>` |
+   | Password | Your database password (reset it under *Database settings* if needed) |
+   | Database | `postgres` |
+   | Schema | `public` (plus any of your own schemas, one connection each) |
+   | Use SSL | On |
+
+3. Under **Configure → Backup**, set **Backup Format** to `DUMP` if you plan to restore into Supabase. Restores then use `pg_restore --no-owner`, which avoids errors about Supabase-managed roles.
+
+Why these settings:
+
+- The **direct connection** host (`db.<ref>.supabase.co`) only has an IPv6 address. Most Docker networks and many servers only have IPv4, so the Session pooler is the reliable choice.
+- The **Transaction pooler** (port `6543`) doesn't support the session features `pg_dump` needs.
+- Setting **Schema** to `public` skips the schemas Supabase manages itself (`auth`, `storage`, `realtime`, `graphql`, `vault`, …). Restoring those into another project fails.
+
+---
+
+## S3-compatible storage setup
+
+Set `BACKUP_STORAGE=remote` (S3 only) or `both` (local + S3), then add your provider's settings:
+
+**AWS S3**
 
 ```env
-BACKUP_STORAGE=both  # local, remote, or both
-
 AWS_ACCESS_KEY_ID=AKIA...
 AWS_SECRET_ACCESS_KEY=...
 AWS_REGION=us-east-1
-AWS_S3_BUCKET=my-postgres-backups
-AWS_S3_PREFIX=backups/postgres  # Optional: organize in folders
+AWS_S3_BUCKET=my-db-backups
+AWS_S3_PREFIX=prod
 ```
 
-**Supabase Storage:**
+**Supabase Storage**
 
 ```env
-BACKUP_STORAGE=both
-
-AWS_ACCESS_KEY_ID=your_supabase_access_key
-AWS_SECRET_ACCESS_KEY=your_supabase_secret_key
-AWS_REGION=us-east-1
-AWS_S3_BUCKET=postgres-backups
-AWS_S3_PREFIX=production/db     # Optional: organize in folders
-AWS_S3_ENDPOINT=https://your-project.supabase.co/storage/v1/s3
-AWS_S3_FORCE_PATH_STYLE=true
+AWS_ACCESS_KEY_ID=<storage access key>
+AWS_SECRET_ACCESS_KEY=<storage secret key>
+AWS_REGION=<project region>
+AWS_S3_BUCKET=backups
+AWS_S3_ENDPOINT=https://<project-ref>.supabase.co/storage/v1/s3
 ```
 
-**MinIO:**
+**MinIO**
 
 ```env
-BACKUP_STORAGE=both
-
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
 AWS_REGION=us-east-1
-AWS_S3_BUCKET=backups
-AWS_S3_PREFIX=postgres-backups  # Optional: organize in folders
-AWS_S3_ENDPOINT=http://localhost:9000
-AWS_S3_FORCE_PATH_STYLE=true
+AWS_S3_BUCKET=db-backups
+AWS_S3_ENDPOINT=http://minio:9000
 ```
 
-#### Custom Backup Location
+**DigitalOcean Spaces**
 
 ```env
-BACKUP_LOCAL_PATH=/var/backups/postgres
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_REGION=nyc3
+AWS_S3_BUCKET=my-db-backups
+AWS_S3_ENDPOINT=https://nyc3.digitaloceanspaces.com
 ```
 
-For Docker:
+Path-style addressing is turned on automatically for Supabase, MinIO, localhost and DigitalOcean endpoints. Force it with `AWS_S3_FORCE_PATH_STYLE=true` if you need to. In Manual mode, you can enter the same settings under **Configure → Storage**.
 
-```yaml
-# Update docker-compose.yml volumes
-volumes:
-  - /var/backups/postgres:/app/backups
-```
+Objects are stored as `<prefix>/<connectionId>/<filename>`.
 
 ---
 
-## First Run
-
-### 1. Test Database Connection
-
-Before creating backups, verify database connectivity:
+## Updating
 
 ```bash
-# Test connection (replace with your credentials)
-psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME
+git pull
+docker compose up -d --build     # Docker
+yarn install && yarn start       # local
 ```
 
-If successful, you'll see:
-
-```
-psql (14.x)
-SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, bits: 256, compression: off)
-Type "help" for help.
-
-postgres=>
-```
-
-Type `\q` to exit.
-
-### 2. Create First Backup
-
-**Via UI:**
-
-1. Open http://localhost:7050
-2. Click "Create Backup" button
-3. Wait for success notification
-4. See backup appear in table
-
-**Via API:**
-
-```bash
-curl -X POST http://localhost:7050/api/backups
-```
-
-### 3. Verify Backup
-
-**Check local filesystem:**
-
-```bash
-# Docker
-docker compose exec backup-app ls -lh /app/backups
-
-# Local
-ls -lh ./backups
-```
-
-**Check via UI:**
-
-- Statistics should show: Total Backups = 1
-- Backup table shows your backup with size and date
-
-### 4. Test Download
-
-Click "Download" button on your backup. The `.sql` file should download.
-
-### 5. Enable Scheduler (Optional)
-
-1. Toggle "Auto-Backup" switch to ON
-2. Verify status changes to "Running"
-3. Check logs for scheduled execution:
-
-```bash
-# Docker
-docker compose logs -f
-
-# Local
-# Watch console output
-```
-
----
-
-## Verification
-
-### System Health Check
-
-```bash
-# Check application health
-curl http://localhost:7050/health
-
-# Expected response
-{"status":"ok","timestamp":"2025-11-04T10:30:00.000Z"}
-```
-
-### Verify All Features
-
-1. **✅ Create Backup** - Click button, backup appears
-2. **✅ Download Backup** - File downloads successfully
-3. **✅ Delete Backup** - Backup removed from list
-4. **✅ Statistics** - Numbers update correctly
-5. **✅ Configuration** - Can update database settings
-6. **✅ Scheduler** - Can start/stop auto-backup
-
-### Check Logs
-
-**Docker:**
-
-```bash
-# View all logs
-docker compose logs
-
-# Follow logs in real-time
-docker compose logs -f
-
-# View last 50 lines
-docker compose logs --tail=50
-```
-
-**Local:**
-
-```bash
-# Logs appear in console where you ran yarn start
-```
-
-Look for:
-
-- ✅ "PostgreSQL Backup Manager running on http://localhost:7050"
-- ✅ "Environment: production" (or development)
-- ✅ No error messages
+Upgrading from 1.x? Read [Upgrading from 1.x](README.md#%EF%B8%8F-upgrading-from-1x) first. Backups moved into per-connection folders, and the Compose service was renamed to `dbm`.
 
 ---
 
 ## Troubleshooting
 
-### Issue: Cannot connect to database
+### `<tool> is not installed or not in PATH`
 
-**Symptoms:**
+The client tools for that database type are missing. Install them (see [step 2](#2-install-the-client-tools-you-need)), or use the Docker image. Then restart the app so it picks up the new `PATH`.
 
-- Error when creating backup
-- "Connection refused" or "Connection timeout"
+### `pg_dump: error: aborting because of server version mismatch`
 
-**Solutions:**
+Your local `pg_dump` is older than the server. Install a newer PostgreSQL client, or use the Docker image, which ships a recent one.
 
-1. **Verify credentials:**
+### Connection refused or timeout
 
-   ```bash
-   docker compose exec backup-app env | grep DB_
-   ```
+- Check the host, port and firewall. Many cloud databases also need your IP on an allow-list.
+- From inside Docker, `localhost` is the container itself. Use `host.docker.internal` (Docker Desktop) or the host's IP.
+- For Supabase, use the Session pooler (see [Supabase setup](#supabase-setup)).
 
-2. **Test connection manually:**
+### SSL / TLS errors
 
-   ```bash
-   psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME
-   ```
+- **PostgreSQL / MySQL:** turn **Use SSL** on for servers that require TLS, and off for servers that don't support it.
+- **MongoDB:** turn **Use TLS** on for Atlas and other TLS-only clusters.
 
-3. **Check firewall:**
+### MySQL: `Authentication requires secure connection` / plugin `caching_sha2_password` errors
 
-   - Ensure database port is accessible
-   - Check security groups (AWS) or firewall rules
+The Docker image uses the **MariaDB** client. Against MySQL 8 servers that use `caching_sha2_password`, either:
 
-4. **For Supabase IPv6 issue:**
+- turn **Use SSL** on, or
+- create the backup user with `mysql_native_password` (on MySQL 8.4, start the server with `--mysql-native-password=ON`).
 
-   ```bash
-   # Stop Docker
-   docker compose down
+### MySQL: `Access denied; you need (at least one of) the PROCESS privilege`
 
-   # Run locally instead
-   yarn install
-   yarn start
-   ```
+Tablespace dumps are already skipped. Also give the user `SELECT, SHOW VIEW, TRIGGER, LOCK TABLES, EVENT` on the database. To include stored routines, it needs `SHOW_ROUTINE` (MySQL 8.0.20+) or `SELECT` on `mysql.*`.
 
-### Issue: pg_dump not found
+### MongoDB: `Authentication failed`
 
-**Symptoms:**
+- Set **Auth source** to the database where the user was created, usually `admin`.
+- For Atlas: turn on **SRV record** and **Use TLS**, and put only the cluster host (e.g. `cluster0.abcd.mongodb.net`) in *Host*.
 
-- Error: "pg_dump: command not found"
+### `EACCES: permission denied` on `/app/backups` or `/app/data`
 
-**Solutions:**
+The container runs as UID `1001`. Use the named volumes, or `chown -R 1001:1001` the host folders you bind-mount.
 
-**Docker:** Already included in image. If error persists:
+### Port 7050 already in use
 
-```bash
-docker compose down
-docker compose build --no-cache
-docker compose up -d
-```
+Set `HOST_PORT=8080` in `.env` for Docker, or `PORT=8080` for local installs.
 
-**Local:**
+### S3 upload failed
 
-```bash
-# Ubuntu/Debian
-sudo apt-get install postgresql-client
+- Check the keys, bucket name, region and endpoint.
+- The credentials need `s3:PutObject`, `s3:GetObject`, `s3:ListBucket` and `s3:DeleteObject`.
+- For self-hosted S3, set `AWS_S3_ENDPOINT`.
 
-# macOS
-brew install postgresql
+### Scheduler doesn't run
 
-# Windows
-# Reinstall PostgreSQL and ensure "Command Line Tools" is selected
-```
+- In ENV mode, set `BACKUP_AUTO=true` and a valid `BACKUP_SCHEDULE`, then restart.
+- Check `docker compose logs -f dbm` for `Scheduled backup failed for "<title>"` messages. One failing connection doesn't stop the others.
 
-### Issue: Permission denied
+### Still stuck?
 
-**Symptoms:**
-
-- Error: "EACCES: permission denied"
-
-**Solutions:**
-
-**Docker:**
-
-```bash
-# Rebuild with proper permissions
-docker compose down
-docker compose up -d --build
-```
-
-**Local:**
-
-```bash
-# Create backups directory with proper permissions
-mkdir -p backups
-chmod 755 backups
-```
-
-### Issue: S3 upload failed
-
-**Symptoms:**
-
-- Backup created locally but not in S3
-- Error: "Access Denied" or "Invalid credentials"
-
-**Solutions:**
-
-1. **Verify credentials:**
-
-   ```bash
-   docker compose exec backup-app env | grep AWS_
-   ```
-
-2. **Test S3 access:**
-
-   ```bash
-   # Install AWS CLI
-   aws s3 ls s3://your-bucket-name --profile your-profile
-   ```
-
-3. **Check endpoint configuration:**
-   - For Supabase: Must set `AWS_S3_ENDPOINT` and `AWS_S3_FORCE_PATH_STYLE=true`
-   - For MinIO: Same as above
-   - For AWS S3: Leave `AWS_S3_ENDPOINT` empty
-
-### Issue: Port 7050 already in use
-
-**Symptoms:**
-
-- Error: "Port 7050 is already in use"
-
-**Solutions:**
-
-**Docker:**
-
-```yaml
-# Edit docker-compose.yml
-ports:
-  - "3001:7050" # Change 3001 to any available port
-```
-
-**Local:**
-
-```env
-# Edit .env
-PORT=3001
-```
-
-### Issue: Scheduler not running
-
-**Symptoms:**
-
-- Scheduler shows "Stopped" even after enabling
-- No scheduled backups created
-
-**Solutions:**
-
-1. **Check schedule format:**
-
-   ```env
-   BACKUP_SCHEDULE=0 2 * * *  # Valid cron format
-   ```
-
-2. **Verify auto-backup is enabled:**
-
-   ```env
-   BACKUP_AUTO=true
-   ```
-
-3. **Restart application:**
-
-   ```bash
-   # Docker
-   docker compose restart
-
-   # Local
-   # Stop with Ctrl+C and run yarn start again
-   ```
-
-4. **Check logs for errors:**
-   ```bash
-   docker compose logs -f | grep scheduler
-   ```
-
----
-
-## Next Steps
-
-After successful installation:
-
-1. **📖 Read the [README](README.md)** for detailed usage instructions
-2. **🏗️ Study [ARCHITECTURE.md](ARCHITECTURE.md)** to understand the system
-3. **📋 Review [API.md](API.md)** for API endpoint documentation
-4. **⚙️ Configure auto-backups** for your needs
-5. **🔒 Set up production security** (HTTPS, firewall, etc.)
-
----
-
-## Support
-
-If you encounter issues not covered here:
-
-1. Check application logs
-2. Verify environment variables
-3. Test database connection manually
-4. Review the [README](README.md) troubleshooting section
-5. Check the [API.md](API.md) for endpoint usage examples
-
----
-
-**Congratulations! You've successfully installed PostgreSQL Backup Manager! 🎉**
+Search or open an issue at **https://github.com/aamaruf/dbm/issues**. Include your install method, database type and version, and the relevant log lines, with secrets removed.

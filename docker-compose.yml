@@ -1,36 +1,45 @@
-version: "3.8"
+# DB Backup Manager
+#
+# Every variable below is optional. Connections are added from the UI and
+# saved in the connection_data volume.
+#
+#   docker compose up -d                  # app only
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#                                         # app + sample Postgres/MySQL/MongoDB
 
 services:
-  pbm:
+  dbm:
     build: .
+    image: dbm:latest
     container_name: db-backup-manager
     ports:
-      - "7050:7050"
+      - "${HOST_PORT:-7050}:7050"
     environment:
-      # Default PostgreSQL connection (optional - more connections can be added in the UI)
-      - DB_HOST=${DB_HOST:-db.xxxxx.supabase.co}
+      # Default PostgreSQL connection (optional). Leave DB_HOST empty to skip it.
+      - DB_HOST=${DB_HOST:-}
       - DB_PORT=${DB_PORT:-5432}
       - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-your_password}
+      - DB_PASSWORD=${DB_PASSWORD:-}
       - DB_NAME=${DB_NAME:-postgres}
       - DB_SCHEMA=${DB_SCHEMA:-}
       - DB_EXCLUDE_TABLES=${DB_EXCLUDE_TABLES:-}
+      - DB_SSL=${DB_SSL:-off}
 
       # Backup Configuration
       - BACKUP_AUTO=${BACKUP_AUTO:-false}
       - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
       - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-7}
       - BACKUP_STORAGE=${BACKUP_STORAGE:-local}
-      - BACKUP_LOCAL_PATH=${BACKUP_LOCAL_PATH:-/app/backups}
+      - BACKUP_LOCAL_PATH=/app/backups
       - BACKUP_FORMAT=${BACKUP_FORMAT:-sql}
 
       # S3-Compatible Storage Configuration (Optional)
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
       - AWS_REGION=${AWS_REGION:-us-east-1}
-      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-}
       - AWS_S3_PREFIX=${AWS_S3_PREFIX:-}
-      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT:-}
       - AWS_S3_FORCE_PATH_STYLE=${AWS_S3_FORCE_PATH_STYLE:-false}
 
       # Server Configuration
@@ -38,6 +47,7 @@ services:
       - NODE_ENV=production
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - CONFIG_MODE=${CONFIG_MODE:-env}
+      - DATA_DIR=/app/data
 
     volumes:
       - backup_data:/app/backups
