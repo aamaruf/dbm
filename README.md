@@ -42,6 +42,7 @@ Save all your connections in one place, run a backup with one click, and restore
 - [Troubleshooting](#-troubleshooting)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
+- [Author](#-author)
 - [License](#-license)
 
 ---
@@ -447,11 +448,29 @@ public/                    Vanilla JS + CSS UI (no build step)
 
 ---
 
+## 👋 Author
+
+Built and maintained by **[aamaruf](https://github.com/aamaruf)**. Questions, ideas or feedback are always welcome, so feel free to reach out.
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/badge/GitHub-aamaruf-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/aamaruf)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-aamaruf131-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aamaruf131)
+[![X](https://img.shields.io/badge/X-@aamaruf131-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/aamaruf131)
+[![Instagram](https://img.shields.io/badge/Instagram-@aamaruf13-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/aamaruf13)
+[![Facebook](https://img.shields.io/badge/Facebook-aamaruf131-0866FF?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/aamaruf131)
+
+</div>
+
+---
+
 ## 📄 License
 
 [MIT](LICENSE) © DB Backup Manager Contributors
 
 ## 🙏 Acknowledgments
+
+DB Backup Manager was inspired by [**postgres-backup-manager**](https://github.com/khalidccnu/postgres-backup-manager) by [@khalidccnu](https://github.com/khalidccnu). It offered a clean, self-hosted web UI for one-click PostgreSQL backup and restore, with S3-compatible storage, scheduling and retention. It showed how simple and useful a focused backup tool can be, and it inspired me to take the idea further: a multi-database manager with PostgreSQL, MySQL and MongoDB drivers, many saved connections, storage per connection, and restoring from one connection into another. Thank you, khalidccnu, for building and sharing it.
 
 Built with [Express](https://expressjs.com/), [node-postgres](https://node-postgres.com/), [mysql2](https://github.com/sidorares/node-mysql2), the [MongoDB Node driver](https://www.mongodb.com/docs/drivers/node/), and the [AWS SDK](https://aws.amazon.com/sdk-for-javascript/). The UI is inspired by [Ant Design](https://ant.design/), with icons from [Material Design Icons](https://pictogrammers.com/library/mdi/) and dates by [Day.js](https://day.js.org/).
 
