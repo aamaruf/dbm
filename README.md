@@ -18,7 +18,7 @@ Save all your connections in one place, run a backup with one click, and restore
 ![Amazon S3](https://img.shields.io/badge/S3--compatible-569A31?logo=amazons3&logoColor=white)
 
 [Quick start](#-quick-start) ·
-[Documentation](#-documentation) ·
+[Installation](INSTALLATION.md) ·
 [API](API.md) ·
 [Architecture](ARCHITECTURE.md) ·
 [Report a bug](https://github.com/aamaruf/dbm/issues)
@@ -40,7 +40,6 @@ Save all your connections in one place, run a backup with one click, and restore
 - [Architecture at a glance](#-architecture-at-a-glance)
 - [Security](#-security)
 - [Troubleshooting](#-troubleshooting)
-- [Upgrading from 1.x](#%EF%B8%8F-upgrading-from-1x)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -359,20 +358,6 @@ The container runs as UID 1001. Use the named volumes from `docker-compose.yml`.
 </details>
 
 More help: [INSTALLATION.md → Troubleshooting](INSTALLATION.md#troubleshooting).
-
----
-
-## ⬆️ Upgrading from 1.x
-
-Version 2.0 turned the PostgreSQL-only app into a multi-database manager. It has **breaking changes**:
-
-- Backups are stored **per connection** (`backups/<connectionId>/`, S3 `<prefix>/<connectionId>/`). Move old backups from the `backups/` root into `backups/default/` (and in S3, into `<prefix>/default/`) to attach them to the Default connection.
-- Some endpoints were replaced:
-  - `POST /api/backups` became `POST /api/connections/:id/backups`.
-  - `POST /api/restore` became `POST /api/connections/:id/restore`.
-  - `POST /api/config/test` became `POST /api/connections/:id/test`.
-  - `POST` and `DELETE /api/config` were removed.
-- The Docker Compose service was renamed from `pbm` to `dbm`.
 
 ---
 

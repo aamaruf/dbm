@@ -279,8 +279,6 @@ docker compose up -d --build     # Docker
 yarn install && yarn start       # local
 ```
 
-Upgrading from 1.x? Read [Upgrading from 1.x](README.md#%EF%B8%8F-upgrading-from-1x) first. Backups moved into per-connection folders, and the Compose service was renamed to `dbm`.
-
 ---
 
 ## Troubleshooting
