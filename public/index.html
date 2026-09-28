@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DB Backup Manager</title>
 
-    <!-- Ant Design CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/antd@5.21.0/dist/reset.css"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#0f172a" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/styles.css" />
@@ -25,15 +21,68 @@
     <div class="container">
       <div class="main-content">
         <!-- Header -->
-        <header class="header">
-          <h1 class="title">
-            <svg class="icon-large" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"
-              />
-            </svg>
-            DB Backup Manager
-          </h1>
+        <header class="app-bar">
+          <div class="app-bar-inner">
+            <div class="brand">
+              <div class="brand-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z" />
+                </svg>
+              </div>
+              <div class="brand-text">
+                <h1 class="title">DB Backup Manager</h1>
+                <span class="brand-subtitle">Backup and restore for PostgreSQL, MySQL and MongoDB</span>
+              </div>
+            </div>
+            <div class="app-bar-actions">
+              <div class="config-mode-toggle">
+                <span class="toggle-label">Config Mode:</span>
+                <label class="switch">
+                  <input type="checkbox" id="config-mode-switch" class="toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span id="config-mode-status" class="config-mode-badge env"
+                  >ENV</span
+                >
+                <button
+                  id="btn-reset-manual-config"
+                  class="btn btn-danger"
+                  style="display: none; align-items: center"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    style="width: 16px; height: 16px"
+                  >
+                    <path
+                      d="M12,5V2L8,6L12,10V7A6,6 0 0,1 18,13A6,6 0 0,1 12,19A6,6 0 0,1 6,13H4A8,8 0 0,0 12,21A8,8 0 0,0 20,13A8,8 0 0,0 12,5Z"
+                    />
+                  </svg>
+                  <span class="btn-text">Reset</span>
+                </button>
+              </div>
+              <button id="btn-config" class="btn">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                  />
+                </svg>
+                <span class="btn-label">Configure</span>
+              </button>
+              <div class="scheduler-toggle">
+                <span class="toggle-label">Auto-Backup</span>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-scheduler" class="toggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span
+                  id="scheduler-status"
+                  class="status-badge status-badge-inactive"
+                  >Stopped</span
+                >
+              </div>
+            </div>
+          </div>
         </header>
 
         <!-- Statistics Cards -->
@@ -126,54 +175,6 @@
               accept=".sql,.dump,.archive"
               style="display: none"
             />
-          </div>
-          <div class="action-right">
-            <div class="config-mode-toggle">
-              <span class="toggle-label">Config Mode:</span>
-              <label class="switch">
-                <input type="checkbox" id="config-mode-switch" class="toggle" />
-                <span class="toggle-slider"></span>
-              </label>
-              <span id="config-mode-status" class="config-mode-badge env"
-                >ENV</span
-              >
-              <button
-                id="btn-reset-manual-config"
-                class="btn btn-danger"
-                style="display: none; align-items: center"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  style="width: 16px; height: 16px"
-                >
-                  <path
-                    d="M12,5V2L8,6L12,10V7A6,6 0 0,1 18,13A6,6 0 0,1 12,19A6,6 0 0,1 6,13H4A8,8 0 0,0 12,21A8,8 0 0,0 20,13A8,8 0 0,0 12,5Z"
-                  />
-                </svg>
-                <span class="btn-text">Reset</span>
-              </button>
-            </div>
-            <button id="btn-config" class="btn">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
-                />
-              </svg>
-              Configure
-            </button>
-            <div class="scheduler-toggle">
-              <span class="toggle-label">Auto-Backup</span>
-              <label class="switch">
-                <input type="checkbox" id="toggle-scheduler" class="toggle" />
-                <span class="toggle-slider"></span>
-              </label>
-              <span
-                id="scheduler-status"
-                class="status-badge status-badge-inactive"
-                >Stopped</span
-              >
-            </div>
           </div>
         </div>
 
@@ -990,17 +991,48 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <p>
-          © <span id="current-year"></span>
-          <a
-            href="https://github.com/aamaruf"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="footer-link"
-          >
-            aamaruf</a
-          >. All rights reserved.
-        </p>
+        <div class="footer-inner">
+          <p class="footer-credit">
+            Built by
+            <a
+              href="https://github.com/aamaruf"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link"
+              >A A Maruf</a
+            >
+          </p>
+          <nav class="footer-social" aria-label="Social links">
+            <a href="https://github.com/aamaruf" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/aamaruf131" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19 3A2 2 0 0 1 21 5V19A2 2 0 0 1 19 21H5A2 2 0 0 1 3 19V5A2 2 0 0 1 5 3H19M18.5 18.5V13.2A3.26 3.26 0 0 0 15.24 9.94C14.39 9.94 13.4 10.46 12.92 11.24V10.13H10.13V18.5H12.92V13.57C12.92 12.8 13.54 12.17 14.31 12.17A1.4 1.4 0 0 1 15.71 13.57V18.5H18.5M6.88 8.56A1.68 1.68 0 0 0 8.56 6.88C8.56 5.95 7.81 5.19 6.88 5.19A1.69 1.69 0 0 0 5.19 6.88C5.19 7.81 5.95 8.56 6.88 8.56M8.27 18.5V10.13H5.5V18.5H8.27Z" />
+              </svg>
+            </a>
+            <a href="https://x.com/aamaruf131" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" transform="translate(2.4 2.4) scale(0.8)" />
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/aamaruf13" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z" />
+              </svg>
+            </a>
+            <a href="https://www.facebook.com/aamaruf131" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
+              </svg>
+            </a>
+          </nav>
+          <p class="footer-copy">
+            &copy; <span id="current-year"></span> A A Maruf. All rights reserved.
+          </p>
+        </div>
       </footer>
     </div>
     <!-- End of container -->

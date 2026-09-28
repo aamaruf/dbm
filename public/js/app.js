@@ -343,27 +343,24 @@ function renderBackupsTable() {
         </td>
         <td>
           <div class="action-buttons">
-            <button class="action-btn btn-download" ${dataAttrs}>
+            <button class="action-btn btn-download" ${dataAttrs} title="Download backup" aria-label="Download backup">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
-              </svg>
-              Download
+              </svg><span class="sr-only">Download</span>
             </button>
             ${
               connectionExists
-                ? `<button class="action-btn btn-restore" ${dataAttrs}>
+                ? `<button class="action-btn btn-restore" ${dataAttrs} title="Restore this backup" aria-label="Restore this backup">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" />
-              </svg>
-              Restore
+              </svg><span class="sr-only">Restore</span>
             </button>`
                 : ""
             }
-            <button class="action-btn danger btn-delete" ${dataAttrs}>
+            <button class="action-btn danger btn-delete" ${dataAttrs} title="Delete backup" aria-label="Delete backup">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-              </svg>
-              Delete
+              </svg><span class="sr-only">Delete</span>
             </button>
           </div>
         </td>
@@ -449,17 +446,15 @@ function renderConnectionsTable() {
       const manageButtons = conn.isDefault
         ? ""
         : `
-            <button class="action-btn btn-conn-edit" data-id="${id}">
+            <button class="action-btn btn-conn-edit" data-id="${id}" title="Edit connection" aria-label="Edit connection">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
-              </svg>
-              Edit
+              </svg><span class="sr-only">Edit</span>
             </button>
-            <button class="action-btn danger btn-conn-delete" data-id="${id}">
+            <button class="action-btn danger btn-conn-delete" data-id="${id}" title="Delete connection" aria-label="Delete connection">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
-              </svg>
-              Delete
+              </svg><span class="sr-only">Delete</span>
             </button>`;
 
       return `
@@ -475,17 +470,15 @@ function renderConnectionsTable() {
         <td>${conn.lastBackupAt ? dayjs(conn.lastBackupAt).fromNow() : "Never"}</td>
         <td>
           <div class="action-buttons">
-            <button class="action-btn btn-conn-backup" data-id="${id}">
+            <button class="action-btn btn-conn-backup" data-id="${id}" title="Backup now" aria-label="Backup now">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-              </svg>
-              Backup
+              </svg><span class="sr-only">Backup</span>
             </button>
-            <button class="action-btn btn-conn-restore" data-id="${id}">
+            <button class="action-btn btn-conn-restore" data-id="${id}" title="Restore from a backup" aria-label="Restore from a backup">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" />
-              </svg>
-              Restore
+              </svg><span class="sr-only">Restore</span>
             </button>
             ${manageButtons}
           </div>

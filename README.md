@@ -450,7 +450,7 @@ public/                    Vanilla JS + CSS UI (no build step)
 
 ## 👋 Author
 
-Built and maintained by **[aamaruf](https://github.com/aamaruf)**. Questions, ideas or feedback are always welcome, so feel free to reach out.
+Built and maintained by **A A Maruf** ([@aamaruf](https://github.com/aamaruf)). Questions, ideas or feedback are always welcome, so feel free to reach out.
 
 <div align="center">
 
@@ -472,7 +472,7 @@ Built and maintained by **[aamaruf](https://github.com/aamaruf)**. Questions, id
 
 DB Backup Manager was inspired by [**postgres-backup-manager**](https://github.com/khalidccnu/postgres-backup-manager) by [@khalidccnu](https://github.com/khalidccnu). It offered a clean, self-hosted web UI for one-click PostgreSQL backup and restore, with S3-compatible storage, scheduling and retention. It showed how simple and useful a focused backup tool can be, and it inspired me to take the idea further: a multi-database manager with PostgreSQL, MySQL and MongoDB drivers, many saved connections, storage per connection, and restoring from one connection into another. Thank you, khalidccnu, for building and sharing it.
 
-Built with [Express](https://expressjs.com/), [node-postgres](https://node-postgres.com/), [mysql2](https://github.com/sidorares/node-mysql2), the [MongoDB Node driver](https://www.mongodb.com/docs/drivers/node/), and the [AWS SDK](https://aws.amazon.com/sdk-for-javascript/). The UI is inspired by [Ant Design](https://ant.design/), with icons from [Material Design Icons](https://pictogrammers.com/library/mdi/) and dates by [Day.js](https://day.js.org/).
+Built with [Express](https://expressjs.com/), [node-postgres](https://node-postgres.com/), [mysql2](https://github.com/sidorares/node-mysql2), the [MongoDB Node driver](https://www.mongodb.com/docs/drivers/node/), and the [AWS SDK](https://aws.amazon.com/sdk-for-javascript/). The UI uses the [Inter](https://rsms.me/inter/) typeface, icons from [Material Design Icons](https://pictogrammers.com/library/mdi/), and dates by [Day.js](https://day.js.org/).
 
 <div align="center">
 
