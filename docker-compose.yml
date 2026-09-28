@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  pbm:
+    build: .
+    container_name: db-backup-manager
+    ports:
+      - "7050:7050"
+    environment:
+      # Default PostgreSQL connection (optional - more connections can be added in the UI)
+      - DB_HOST=${DB_HOST:-db.xxxxx.supabase.co}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-your_password}
+      - DB_NAME=${DB_NAME:-postgres}
+      - DB_SCHEMA=${DB_SCHEMA:-}
+      - DB_EXCLUDE_TABLES=${DB_EXCLUDE_TABLES:-}
+
+      # Backup Configuration
+      - BACKUP_AUTO=${BACKUP_AUTO:-false}
+      - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-7}
+      - BACKUP_STORAGE=${BACKUP_STORAGE:-local}
+      - BACKUP_LOCAL_PATH=${BACKUP_LOCAL_PATH:-/app/backups}
+      - BACKUP_FORMAT=${BACKUP_FORMAT:-sql}
+
+      # S3-Compatible Storage Configuration (Optional)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - AWS_S3_PREFIX=${AWS_S3_PREFIX:-}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - AWS_S3_FORCE_PATH_STYLE=${AWS_S3_FORCE_PATH_STYLE:-false}
+
+      # Server Configuration
+      - PORT=7050
+      - NODE_ENV=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - CONFIG_MODE=${CONFIG_MODE:-env}
+
+    volumes:
+      - backup_data:/app/backups
+      - log_data:/app/logs
+      - connection_data:/app/data
+
+    restart: unless-stopped
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  backup_data:
+    driver: local
+  log_data:
+    driver: local
+  connection_data:
+    driver: local

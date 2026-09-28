@@ -1,0 +1,133 @@
+# ==============================================================================
+# PostgreSQL Backup Manager - Docker Ignore File
+# ==============================================================================
+# This file specifies which files and directories should be excluded from
+# the Docker build context to reduce image size and build time.
+# ==============================================================================
+
+# ==============================================================================
+# Dependencies
+# ==============================================================================
+# Node modules will be installed fresh in the container
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==============================================================================
+# Environment & Secrets
+# ==============================================================================
+# Never include sensitive configuration in the image
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# ==============================================================================
+# Backup Files
+# ==============================================================================
+# Local backups should not be included in the image
+# They will be stored in Docker volumes instead
+backups/
+*.sql
+*.sql.gz
+*.dump
+*.backup
+
+# ==============================================================================
+# Logs
+# ==============================================================================
+# Log files should not be included in the image
+# They will be stored in Docker volumes instead
+logs/
+*.log
+
+# ==============================================================================
+# Version Control
+# ==============================================================================
+# Git files are not needed in the container
+.git/
+.gitignore
+.gitattributes
+
+# ==============================================================================
+# Documentation
+# ==============================================================================
+# Most documentation is not needed in the container
+# Keep README.md for reference
+*.md
+!README.md
+docs/
+
+# ==============================================================================
+# IDE & Editor Files
+# ==============================================================================
+# Development tools configuration should not be in the image
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.iml
+*.swp
+*.swo
+*~
+
+# ==============================================================================
+# Operating System Files
+# ==============================================================================
+# OS-specific files should not be in the image
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+
+# ==============================================================================
+# Testing
+# ==============================================================================
+# Test files and coverage reports are not needed in production
+coverage/
+.nyc_output/
+test/
+tests/
+*.test.js
+*.spec.js
+
+# ==============================================================================
+# Build & Temporary Files
+# ==============================================================================
+# Build artifacts and temporary files should not be in the image
+dist/
+build/
+tmp/
+temp/
+*.tmp
+.cache/
+
+# ==============================================================================
+# Docker Files
+# ==============================================================================
+# Docker configuration files should not be copied into the image
+Dockerfile
+Dockerfile.*
+docker-compose*.yml
+.dockerignore
+
+# ==============================================================================
+# CI/CD Configuration
+# ==============================================================================
+# CI/CD files are not needed in the container
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# ==============================================================================
+# Code Quality & Formatting
+# ==============================================================================
+# Linting and formatting config is not needed in production
+.prettierrc
+.prettierignore
+.eslintrc*
+.editorconfig

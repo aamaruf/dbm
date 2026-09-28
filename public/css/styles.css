@@ -1,0 +1,1623 @@
+/* Import Ant Design CSS */
+@import url("https://cdn.jsdelivr.net/npm/antd@5.21.0/dist/antd.min.css");
+
+/* ==================== Ant Design Theme Customization ==================== */
+:root {
+  --ant-primary-color: #1677ff;
+  --ant-primary-1: #e6f4ff;
+  --ant-primary-2: #bae0ff;
+  --ant-primary-3: #91caff;
+  --ant-primary-4: #69b1ff;
+  --ant-primary-5: #4096ff;
+  --ant-primary-6: #1677ff;
+  --ant-primary-7: #0958d9;
+  --ant-success-color: #52c41a;
+  --ant-warning-color: #faad14;
+  --ant-error-color: #ff4d4f;
+  --ant-info-color: #1677ff;
+}
+
+/* ==================== Global Styles ==================== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* ==================== Custom Header ==================== */
+.header {
+  background: linear-gradient(135deg, #1677ff 0%, #722ed1 100%);
+  padding: 32px 24px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 600;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.icon-large {
+  width: clamp(36px, 6vw, 48px);
+  height: clamp(36px, 6vw, 48px);
+  flex-shrink: 0;
+}
+
+/* ==================== Stats Grid with Ant Design Cards ==================== */
+.stats-grid {
+  max-width: 1400px;
+  margin: auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.stat-icon svg {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+
+.stat-icon-primary {
+  background: linear-gradient(135deg, #1677ff, #4096ff);
+}
+
+.stat-icon-success {
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+}
+
+.stat-icon-warning {
+  background: linear-gradient(135deg, #faad14, #ffc53d);
+}
+
+.stat-icon-info {
+  background: linear-gradient(135deg, #13c2c2, #36cfc9);
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1.35;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+}
+
+/* ==================== Action Bar ==================== */
+.action-bar {
+  max-width: 1400px;
+  margin: auto;
+  padding: 0 24px 24px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-left,
+.action-right {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ==================== Ant Design Buttons (Custom) ==================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 15px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5715;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  height: 32px;
+  user-select: none;
+}
+
+.btn:hover {
+  color: #4096ff;
+  border-color: #4096ff;
+}
+
+.btn:active {
+  color: #0958d9;
+  border-color: #0958d9;
+}
+
+.btn-primary {
+  background: #1677ff;
+  color: #fff;
+  border-color: #1677ff;
+}
+
+.btn-primary:hover {
+  background: #4096ff;
+  border-color: #4096ff;
+  color: #fff;
+}
+
+.btn-primary:active {
+  background: #0958d9;
+  border-color: #0958d9;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== Ant Design Switch (Toggle) ==================== */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  transition: all 0.3s;
+  border-radius: 100px;
+}
+
+.toggle-slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #fff;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
+}
+
+.switch input:checked + .toggle-slider {
+  background-color: #1677ff;
+}
+
+.switch input:checked + .toggle-slider:before {
+  transform: translateX(22px);
+}
+
+.switch input:disabled + .toggle-slider {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.switch input:disabled + .toggle-slider:before {
+  background-color: #e0e0e0;
+}
+
+.scheduler-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  transition: opacity 0.3s;
+}
+
+.scheduler-toggle.disabled {
+  opacity: 0.6;
+}
+
+.config-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.config-mode-toggle .btn-danger {
+  margin-left: 0 !important;
+  font-size: 13px;
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.toggle-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* ==================== Ant Design Tag/Badge ==================== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 4px;
+  line-height: 20px;
+  border: 1px solid transparent;
+}
+
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-badge-active {
+  background: #f6ffed;
+  color: #52c41a;
+  border-color: #b7eb8f;
+}
+
+.status-badge-active::before {
+  background: #52c41a;
+}
+
+.status-badge-inactive {
+  background: #fffbe6;
+  color: #faad14;
+  border-color: #ffe58f;
+}
+
+.status-badge-inactive::before {
+  background: #faad14;
+}
+
+.location-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 4px;
+  line-height: 20px;
+  border: 1px solid transparent;
+}
+
+.location-local {
+  background: #e6f4ff;
+  color: #1677ff;
+  border-color: #91caff;
+}
+
+.location-remote {
+  background: #f6ffed;
+  color: #52c41a;
+  border-color: #b7eb8f;
+}
+
+.location-both {
+  background: #fff7e6;
+  color: #faad14;
+  border-color: #ffd591;
+}
+
+/* ==================== Main Content ==================== */
+.main-content {
+  padding-bottom: 32px;
+}
+
+/* ==================== Ant Design Table ==================== */
+.backups-section {
+  max-width: 1400px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+.table-container {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+  position: relative;
+}
+
+.table-header {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.table-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  margin: 0;
+}
+
+.operations-container {
+  margin-top: 16px;
+}
+
+.operations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.operations-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.operations-log-list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.operation-item-card {
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.operations-empty {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+.operation-compact-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.operation-item-card .operation-type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #1677ff;
+  background: #e6f4ff;
+  border: 1px solid #91caff;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.operation-item-card .operation-status {
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.operation-item-card .operation-time {
+  margin-left: auto;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.operation-item-card .operation-status-chip {
+  background: #f5f5f5;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.operation-item-card .operation-status-chip.success {
+  background: #f6ffed;
+  border-color: #b7eb8f;
+  color: #389e0d;
+}
+
+.operation-item-card .operation-status-chip.failed {
+  background: #fff2f0;
+  border-color: #ffccc7;
+  color: #cf1322;
+}
+
+.operation-item-card .operation-status-chip.active {
+  background: #e6f4ff;
+  border-color: #91caff;
+  color: #0958d9;
+}
+
+.operation-item-card .operation-status-chip.info {
+  background: #fffbe6;
+  border-color: #ffe58f;
+  color: #d48806;
+}
+
+.operation-compact-title {
+  margin-top: 4px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.82);
+  line-height: 1.35;
+}
+
+.operation-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.operation-line {
+  display: grid;
+  grid-template-columns: 72px 92px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 5px 6px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+}
+
+.operation-line-time {
+  color: rgba(0, 0, 0, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.operation-line-status {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.operation-line-text {
+  color: rgba(0, 0, 0, 0.88);
+  word-break: break-word;
+}
+
+.operation-line.status-success {
+  border-left: 3px solid #52c41a;
+}
+
+.operation-line.status-error {
+  border-left: 3px solid #ff4d4f;
+}
+
+.operation-line.status-in_progress,
+.operation-line.status-started {
+  border-left: 3px solid #1677ff;
+}
+
+.operation-line.status-info {
+  border-left: 3px solid #faad14;
+}
+
+@media (max-width: 768px) {
+  .operations-log-list {
+    padding: 8px 10px 10px;
+    max-height: 360px;
+  }
+
+  .operations-actions {
+    justify-content: center;
+  }
+
+  .operation-line {
+    grid-template-columns: 64px 80px 1fr;
+    gap: 6px;
+    font-size: 11px;
+    padding: 4px 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .operations-header {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .operations-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .operation-compact-header {
+    gap: 6px;
+  }
+
+  .operation-line {
+    grid-template-columns: 58px 74px 1fr;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .operation-item-card {
+    padding: 8px;
+  }
+
+  .operation-item-card .operation-time {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.backups-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.backups-table thead {
+  background: #fafafa;
+}
+
+.backups-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+  white-space: nowrap;
+}
+
+.backups-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.backups-table tbody tr {
+  transition: background 0.3s;
+}
+
+.backups-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.backups-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ==================== Action Buttons in Table ==================== */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  transition: all 0.3s;
+  height: 24px;
+  line-height: 22px;
+}
+
+.action-btn:hover {
+  color: #4096ff;
+  border-color: #4096ff;
+}
+
+.action-btn.danger:hover {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==================== Empty State ==================== */
+.empty-state {
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.empty-state p {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.empty-hint {
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+}
+
+/* ==================== Ant Design Modal ==================== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 24px;
+}
+
+.modal.show {
+  display: flex;
+  animation: antModalMaskFadeIn 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+@keyframes antModalMaskFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  animation: antModalZoom 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.modal-large {
+  max-width: 900px;
+}
+
+@keyframes antModalZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 0 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 16px;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(85vh - 110px);
+}
+
+/* ==================== Ant Design Tabs ==================== */
+.config-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.config-tab {
+  padding: 12px 0;
+  margin: 0 32px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.88);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.config-tab:hover {
+  color: #4096ff;
+}
+
+.config-tab.active {
+  color: #1677ff;
+  font-weight: 500;
+  border-bottom-color: #1677ff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: antFadeIn 0.3s;
+}
+
+@keyframes antFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ==================== Ant Design Form ==================== */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.form-control {
+  width: 100%;
+  padding: 4px 11px;
+  font-size: 14px;
+  line-height: 1.5715;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  min-height: 32px;
+  box-sizing: border-box;
+}
+
+.form-control:hover:not(:disabled) {
+  border-color: #4096ff;
+}
+
+.form-control:focus {
+  border-color: #4096ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: none;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background: #f5f5f5;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+  border-color: #d9d9d9;
+}
+
+/* Ant Design Input with Prefix/Suffix */
+input.form-control::placeholder,
+select.form-control::placeholder,
+textarea.form-control::placeholder {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+/* Input with icon (password toggle) */
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon .form-control {
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 0, 0, 0.45);
+  transition: color 0.3s;
+  border-radius: 4px;
+}
+
+.toggle-password:hover {
+  color: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.toggle-password .eye-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.toggle-password.hidden .eye-icon {
+  opacity: 0.5;
+}
+
+/* Select specific styling */
+select.form-control {
+  cursor: pointer;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%27050000' fill-opacity='0.45' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Number input arrows for Ant Design */
+input[type="number"].form-control {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+}
+
+input[type="number"].form-control::-webkit-outer-spin-button,
+input[type="number"].form-control::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Password input specific */
+input[type="password"].form-control {
+  font-family: "password", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+  letter-spacing: 0.3em;
+}
+
+input[type="password"].form-control::placeholder {
+  letter-spacing: normal;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+}
+
+/* Textarea specific */
+textarea.form-control {
+  min-height: 80px;
+  resize: vertical;
+  padding: 7px 11px;
+}
+
+/* Input focus states with Ant Design blue */
+.form-control:focus-visible {
+  border-color: #4096ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: none;
+}
+
+.form-hint,
+small.form-hint {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 4px;
+  display: block;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.88);
+  margin-bottom: 4px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #1677ff;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox-label span {
+  user-select: none;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.info-box {
+  background: #e6f4ff;
+  border: 1px solid #91caff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 1.5715;
+}
+
+.info-box p {
+  margin: 0 0 8px 0;
+}
+
+.info-box p:last-child {
+  margin-bottom: 0;
+}
+
+.info-box ol {
+  margin: 8px 0 0 20px;
+  padding: 0;
+}
+
+.info-box code {
+  background: rgba(22, 119, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.88);
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+.storage-s3-config {
+  margin-top: 24px;
+}
+
+/* ==================== Loading (Ant Design Spin) ==================== */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  gap: 16px;
+  border-radius: 8px;
+}
+
+.loading-overlay.hidden {
+  display: none !important;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  margin-top: 8px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #1677ff;
+  border-radius: 50%;
+  animation: antSpinMove 1s infinite linear;
+}
+
+@keyframes antSpinMove {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== Ant Design Message/Notification ==================== */
+.toast-container,
+#toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 7050;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toast {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  min-width: 384px;
+  max-width: 480px;
+  animation: antNotificationFadeIn 0.24s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+@keyframes antNotificationFadeIn {
+  0% {
+    left: 384px;
+    opacity: 0;
+  }
+  100% {
+    left: 0;
+    opacity: 1;
+  }
+}
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+.toast-success .toast-icon {
+  color: #52c41a;
+}
+
+.toast-error .toast-icon {
+  color: #ff4d4f;
+}
+
+.toast-info .toast-icon {
+  color: #1677ff;
+}
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.88);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.toast-message {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 1.5715;
+}
+
+.toast-close {
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.3s;
+  font-weight: 700;
+}
+
+.toast-close:hover {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* ==================== Config Mode Badge ==================== */
+.config-mode-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+}
+
+.config-mode-badge.env {
+  background: #f0f5ff;
+  color: #1677ff;
+  border: 1px solid #91caff;
+}
+
+.config-mode-badge.manual {
+  background: #fff7e6;
+  color: #fa8c16;
+  border: 1px solid #ffd591;
+}
+
+/* ==================== Info Boxes ==================== */
+.info-box {
+  background: #f0f5ff;
+  border: 1px solid #91caff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.info-box p {
+  margin: 0;
+  color: #1677ff;
+  font-size: 14px;
+}
+
+.info-box strong {
+  font-weight: 600;
+}
+
+/* ==================== Manual Save Buttons ==================== */
+.manual-save-btn {
+  transition: all 0.3s ease;
+}
+
+/* ==================== Disabled/Readonly Fields in ENV Mode ==================== */
+.form-control[readonly],
+.form-control:disabled,
+select:disabled {
+  background-color: #f5f5f5 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+  border-color: #d9d9d9 !important;
+}
+
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ==================== Connections ==================== */
+.connections-section {
+  margin-bottom: 16px;
+}
+
+.table-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.filter-select {
+  width: auto;
+  min-width: 200px;
+}
+
+.db-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 7px;
+  font-size: 12px;
+  border-radius: 4px;
+  line-height: 20px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.db-type-postgres {
+  background: #e6f4ff;
+  color: #1677ff;
+  border-color: #91caff;
+}
+
+.db-type-mysql {
+  background: #fff7e6;
+  color: #d46b08;
+  border-color: #ffd591;
+}
+
+.db-type-mongodb {
+  background: #f6ffed;
+  color: #389e0d;
+  border-color: #b7eb8f;
+}
+
+.default-tag {
+  margin-left: 6px;
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.operation-connection {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row > .form-group {
+  flex: 1;
+}
+
+.form-row > .form-group-small {
+  flex: 0 0 120px;
+}
+
+.modal-small {
+  max-width: 480px;
+}
+
+.restore-target {
+  font-weight: 600;
+}
+
+.warning-box {
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #cf1322;
+  font-size: 14px;
+}
+
+.btn-danger-solid {
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #fff;
+}
+
+.btn-danger-solid:hover {
+  background: #ff7875;
+  border-color: #ff7875;
+  color: #fff;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .modal-content {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 24px 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-left,
+  .action-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .config-mode-toggle,
+  .scheduler-toggle {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .config-mode-toggle .btn-danger {
+    width: 100%;
+    margin-top: 8px;
+    margin-left: 0 !important;
+  }
+
+  .toggle-label {
+    font-size: 13px;
+  }
+
+  .config-mode-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .table-header,
+  .backups-table {
+    min-width: 0;
+  }
+
+  .toast-container,
+  #toast-container {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: 100%;
+  }
+
+  .modal {
+    padding: 16px;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+  }
+
+  .modal-body {
+    max-height: calc(90vh - 110px);
+    padding: 16px;
+  }
+
+  .config-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .config-tab {
+    white-space: nowrap;
+    margin-right: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .icon-large {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .action-bar {
+    padding: 0 16px 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .config-mode-toggle .btn-danger {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .backups-section {
+    padding: 0 16px;
+  }
+
+  .table-header,
+  .backups-table th,
+  .backups-table td {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+
+  .modal-header h2 {
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .toast-title {
+    font-size: 14px;
+  }
+
+  .toast-message {
+    font-size: 13px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .config-mode-toggle {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  .config-mode-toggle .btn-danger svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .switch {
+    transform: scale(0.85);
+  }
+
+  .action-right {
+    gap: 8px;
+  }
+}
+
+/* ==================== Footer ==================== */
+.footer {
+  background: #fff;
+  border-top: 1px solid #e8e8e8;
+  padding: 24px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.footer-link {
+  color: #1677ff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #0958d9;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 20px;
+    margin-top: 30px;
+  }
+
+  .footer p {
+    font-size: 13px;
+  }
+}

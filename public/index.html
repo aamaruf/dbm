@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DB Backup Manager</title>
+
+    <!-- Ant Design CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/antd@5.21.0/dist/reset.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css" />
+
+    <!-- Day.js for date formatting -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/relativeTime.js"></script>
+    <script>
+      dayjs.extend(window.dayjs_plugin_relativeTime);
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <h1 class="title">
+            <svg class="icon-large" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"
+              />
+            </svg>
+            DB Backup Manager
+          </h1>
+        </header>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-primary">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-total">0</div>
+              <div class="stat-label">Total Backups</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-success">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8H21L4,8.01V18L6.14,10H23.21L20.93,18.5C20.7,19.37 19.92,20 19,20Z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-local">0</div>
+              <div class="stat-label">Local Storage</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-info">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M3,13H5V11H3V13M7,13H9V11H7V13M11,13H13V11H11V13M15,13H17V11H15V13M19,13H21V11H19V13M3,17H5V15H3V17M7,17H9V15H7V17M11,17H13V15H11V17M15,17H17V15H15V17M19,17H21V15H19V17M3,9H5V7H3V9M7,9H9V7H7V9M11,9H13V7H11V9M15,9H17V7H15V9M19,9H21V7H19V9Z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-remote">0</div>
+              <div class="stat-label">Remote Storage</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-warning">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2M12,4A6,6 0 0,0 6,10C6,13.31 8.69,16 12.1,16L11.22,13.77C10.95,13.29 11.11,12.68 11.59,12.4L12.45,11.9C12.93,11.63 13.54,11.79 13.82,12.27L15.74,14.69C17.12,13.59 18,11.9 18,10A6,6 0 0,0 12,4M12,9A1,1 0 0,1 13,10A1,1 0 0,1 12,11A1,1 0 0,1 11,10A1,1 0 0,1 12,9M7,18A1,1 0 0,0 6,19A1,1 0 0,0 7,20A1,1 0 0,0 8,19A1,1 0 0,0 7,18M12.09,13.27L14.58,19.58L17.17,18.08L12.95,12.77L12.09,13.27Z"
+                />
+              </svg>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value" id="stat-size">0 B</div>
+              <div class="stat-label">Total Size</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="action-left">
+            <button id="btn-add-connection" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+              </svg>
+              Add Connection
+            </button>
+            <button id="btn-upload" class="btn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M14,13V19H10V13H7L12,8L17,13M5,20V22H19V20H5M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V16A2,2 0 0,0 5,18H19A2,2 0 0,0 21,16V5A2,2 0 0,0 19,3Z"
+                />
+              </svg>
+              Upload Backup File
+            </button>
+            <button id="btn-refresh" class="btn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"
+                />
+              </svg>
+              Refresh
+            </button>
+            <input
+              type="file"
+              id="backup-file-input"
+              accept=".sql,.dump,.archive"
+              style="display: none"
+            />
+          </div>
+          <div class="action-right">
+            <div class="config-mode-toggle">
+              <span class="toggle-label">Config Mode:</span>
+              <label class="switch">
+                <input type="checkbox" id="config-mode-switch" class="toggle" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="config-mode-status" class="config-mode-badge env"
+                >ENV</span
+              >
+              <button
+                id="btn-reset-manual-config"
+                class="btn btn-danger"
+                style="display: none; align-items: center"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style="width: 16px; height: 16px"
+                >
+                  <path
+                    d="M12,5V2L8,6L12,10V7A6,6 0 0,1 18,13A6,6 0 0,1 12,19A6,6 0 0,1 6,13H4A8,8 0 0,0 12,21A8,8 0 0,0 20,13A8,8 0 0,0 12,5Z"
+                  />
+                </svg>
+                <span class="btn-text">Reset</span>
+              </button>
+            </div>
+            <button id="btn-config" class="btn">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                />
+              </svg>
+              Configure
+            </button>
+            <div class="scheduler-toggle">
+              <span class="toggle-label">Auto-Backup</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-scheduler" class="toggle" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span
+                id="scheduler-status"
+                class="status-badge status-badge-inactive"
+                >Stopped</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Connections Table -->
+        <div class="backups-section connections-section">
+          <div class="table-container">
+            <div class="table-header">
+              <h3 class="table-title">Connections</h3>
+            </div>
+
+            <table class="backups-table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Host</th>
+                  <th>Database</th>
+                  <th>Backups</th>
+                  <th>Last Backup</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="connections-tbody">
+                <tr class="empty-row">
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <p>No connections yet</p>
+                      <p class="empty-hint">
+                        Click "Add Connection" to get started
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Backups Table -->
+        <div class="backups-section">
+          <div class="table-container">
+            <div class="table-header table-header-flex">
+              <h3 class="table-title">Recent Backups</h3>
+              <select id="backup-connection-filter" class="form-control filter-select">
+                <option value="">All connections</option>
+              </select>
+            </div>
+
+            <div id="loading" class="loading-overlay hidden">
+              <div class="spinner"></div>
+              <span class="loading-text">Loading backups...</span>
+            </div>
+
+            <table class="backups-table">
+              <thead>
+                <tr>
+                  <th>Filename</th>
+                  <th>Connection</th>
+                  <th>Size</th>
+                  <th>Date</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="backups-tbody">
+                <tr class="empty-row">
+                  <td colspan="6">
+                    <div class="empty-state">
+                      <svg
+                        class="empty-icon"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path
+                          d="M19,20H4C2.89,20 2,19.1 2,18V6C2,4.89 2.89,4 4,4H10L12,6H19A2,2 0 0,1 21,8H21L4,8.01V18L6.14,10H23.21L20.93,18.5C20.7,19.37 19.92,20 19,20Z"
+                        />
+                      </svg>
+                      <p>No backups found</p>
+                      <p class="empty-hint">
+                        Use the Backup action on a connection to get started
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Operation Logs -->
+        <div class="backups-section">
+          <div class="table-container operations-container">
+            <div class="table-header operations-header">
+              <h3 class="table-title">Operation Log</h3>
+              <div class="operations-actions">
+                <button id="btn-refresh-logs" class="btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"
+                    />
+                  </svg>
+                  Refresh Log
+                </button>
+                <button id="btn-clear-logs" class="btn">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6Z"
+                    />
+                  </svg>
+                  Clear Log
+                </button>
+              </div>
+            </div>
+            <div id="operations-log-list" class="operations-log-list"></div>
+          </div>
+        </div>
+
+        <!-- Configuration Modal -->
+        <div id="config-modal" class="modal">
+          <div class="modal-content modal-large">
+            <div class="modal-header">
+              <h2>Configuration</h2>
+              <button class="modal-close" id="config-modal-close">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="config-tabs">
+                <button class="config-tab active" data-tab="database">
+                  Database
+                </button>
+                <button class="config-tab" data-tab="storage">Storage</button>
+                <button class="config-tab" data-tab="backup">Backup</button>
+              </div>
+
+              <!-- Database Tab -->
+              <div id="tab-database" class="tab-content active">
+                <div id="database-env-info" class="info-box">
+                  <p>
+                    <strong>ENV Mode:</strong> Database configuration is read
+                    from environment variables. Toggle to Manual mode to edit
+                    settings.
+                  </p>
+                </div>
+
+                <div
+                  id="database-manual-info"
+                  class="info-box"
+                  style="display: none"
+                >
+                  <p>
+                    <strong>Manual Mode:</strong> Configure database connection
+                    below. Changes take effect immediately.
+                  </p>
+                </div>
+
+                <form id="config-form">
+                  <div class="form-group">
+                    <label for="input-db-host">Host</label>
+                    <input
+                      type="text"
+                      id="input-db-host"
+                      class="form-control"
+                      placeholder="db.example.com"
+                      readonly
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="input-db-port">Port</label>
+                    <input
+                      type="number"
+                      id="input-db-port"
+                      class="form-control"
+                      placeholder="5432"
+                      readonly
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="input-db-user">Username</label>
+                    <input
+                      type="text"
+                      id="input-db-user"
+                      class="form-control"
+                      placeholder="postgres"
+                      readonly
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="input-db-password">Password</label>
+                    <div class="input-with-icon">
+                      <input
+                        type="password"
+                        id="input-db-password"
+                        class="form-control"
+                        placeholder="password"
+                        readonly
+                      />
+                      <button
+                        type="button"
+                        class="toggle-password"
+                        data-target="input-db-password"
+                      >
+                        <svg
+                          class="eye-icon"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path
+                            d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="input-db-name">Database</label>
+                    <input
+                      type="text"
+                      id="input-db-name"
+                      class="form-control"
+                      placeholder="postgres"
+                      readonly
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="input-schema">Schema (Optional)</label>
+                    <input
+                      type="text"
+                      id="input-schema"
+                      class="form-control"
+                      placeholder="public"
+                      readonly
+                    />
+                    <small class="form-hint"
+                      >Database schema to backup. Leave empty to backup all
+                      schemas.</small
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="input-exclude-tables"
+                      >Exclude Tables (Optional)</label
+                    >
+                    <input
+                      type="text"
+                      id="input-exclude-tables"
+                      class="form-control"
+                      placeholder="migrations,sessions,cache"
+                      readonly
+                    />
+                    <small class="form-hint"
+                      >Comma-separated list of tables to exclude from backup
+                      (e.g., migrations,sessions)</small
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label>SSL Mode</label>
+                    <div
+                      style="
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        margin-top: 4px;
+                      "
+                    >
+                      <label class="switch">
+                        <input type="checkbox" id="input-ssl-mode" disabled />
+                        <span class="toggle-slider"></span>
+                      </label>
+                      <span id="ssl-mode-status" class="config-mode-badge env"
+                        >OFF</span
+                      >
+                    </div>
+                    <small class="form-hint"
+                      >Enable SSL for database connections. Turn ON when your
+                      PostgreSQL server requires SSL (e.g., cloud-hosted
+                      databases).</small
+                    >
+                  </div>
+
+                  <div class="form-actions">
+                    <button
+                      type="button"
+                      id="btn-save-db-manual"
+                      class="btn btn-primary manual-save-btn"
+                      style="display: none"
+                    >
+                      Save Database Config
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Storage Tab -->
+              <div id="tab-storage" class="tab-content">
+                <div id="storage-env-info" class="info-box">
+                  <p>
+                    <strong>ENV Mode:</strong> Storage configuration is read
+                    from environment variables. Toggle to Manual mode to edit S3
+                    settings.
+                  </p>
+                </div>
+
+                <div
+                  id="storage-manual-info"
+                  class="info-box"
+                  style="display: none"
+                >
+                  <p>
+                    <strong>Manual Mode:</strong> Configure S3 storage below.
+                    Changes take effect immediately.
+                  </p>
+                </div>
+
+                <form id="storage-form">
+                  <div class="storage-s3-config">
+                    <h3 class="section-title">
+                      S3-Compatible Storage Configuration
+                    </h3>
+
+                    <div class="form-group">
+                      <label for="input-access-key">Access Key ID</label>
+                      <input
+                        type="text"
+                        id="input-access-key"
+                        class="form-control"
+                        placeholder="abc123xyz..."
+                        readonly
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="input-secret-key">Secret Access Key</label>
+                      <div class="input-with-icon">
+                        <input
+                          type="password"
+                          id="input-secret-key"
+                          class="form-control"
+                          placeholder="secret123..."
+                          readonly
+                        />
+                        <button
+                          type="button"
+                          class="toggle-password"
+                          data-target="input-secret-key"
+                        >
+                          <svg
+                            class="eye-icon"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path
+                              d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <small class="form-hint"
+                        >Leave blank to keep existing value</small
+                      >
+                    </div>
+
+                    <div class="form-group">
+                      <label for="input-region">Region</label>
+                      <input
+                        type="text"
+                        id="input-region"
+                        class="form-control"
+                        placeholder="us-east-1"
+                        readonly
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="input-bucket">Bucket Name</label>
+                      <input
+                        type="text"
+                        id="input-bucket"
+                        class="form-control"
+                        placeholder="postgres-backups"
+                        readonly
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="input-prefix"
+                        >Folder Path (Prefix) - Optional</label
+                      >
+                      <input
+                        type="text"
+                        id="input-prefix"
+                        class="form-control"
+                        placeholder="backups/postgres or backups/production/postgres"
+                        readonly
+                      />
+                      <small class="form-hint"
+                        >Organize backups in folders. Examples:
+                        "backups/postgres" or "prod/db/backups"</small
+                      >
+                    </div>
+
+                    <div class="form-group">
+                      <label for="input-endpoint"
+                        >Custom Endpoint (Optional)</label
+                      >
+                      <input
+                        type="text"
+                        id="input-endpoint"
+                        class="form-control"
+                        placeholder="https://your-project.supabase.co/storage/v1/s3"
+                        readonly
+                      />
+                      <small class="form-hint"
+                        >For Supabase, MinIO, DigitalOcean Spaces, etc.</small
+                      >
+                    </div>
+
+                    <div class="form-group">
+                      <label class="checkbox-label">
+                        <input
+                          type="checkbox"
+                          id="input-force-path-style"
+                          disabled
+                        />
+                        <span
+                          >Force Path Style
+                          <span
+                            class="badge"
+                            style="
+                              background: #52c41a;
+                              color: white;
+                              font-size: 11px;
+                              padding: 2px 6px;
+                              border-radius: 3px;
+                              margin-left: 5px;
+                            "
+                            >AUTO</span
+                          ></span
+                        >
+                      </label>
+                      <small class="form-hint"
+                        >✨ Auto-detected based on endpoint (Supabase, MinIO,
+                        localhost → enabled; AWS S3 → disabled)</small
+                      >
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button
+                      type="button"
+                      id="btn-save-s3-manual"
+                      class="btn btn-primary manual-save-btn"
+                      style="display: none"
+                    >
+                      Save S3 Config
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Backup Settings Tab -->
+              <div id="tab-backup" class="tab-content">
+                <div id="backup-env-mode" class="info-box">
+                  <p>
+                    <strong>ENV Mode:</strong> Backup settings are configured
+                    via environment variables. Toggle to Manual mode to edit
+                    settings.
+                  </p>
+                </div>
+
+                <div
+                  id="backup-manual-mode"
+                  class="info-box"
+                  style="display: none"
+                >
+                  <p>
+                    <strong>Manual Mode:</strong> Configure all backup settings
+                    below. Changes take effect immediately.
+                  </p>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-backup-format">Backup Format</label>
+                  <select
+                    id="input-backup-format"
+                    class="form-control"
+                    disabled
+                  >
+                    <option value="sql">SQL (Plain Text - .sql)</option>
+                    <option value="dump">DUMP (Custom Format - .dump)</option>
+                  </select>
+                  <small class="form-hint">
+                    Applies to PostgreSQL connections. SQL: Plain text, can be
+                    edited. DUMP: Compressed, faster restore. MySQL always uses
+                    .sql and MongoDB always uses .archive.
+                  </small>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-retention">Retention Days</label>
+                  <input
+                    type="number"
+                    id="input-retention"
+                    class="form-control"
+                    placeholder="7"
+                    min="1"
+                    readonly
+                  />
+                  <small class="form-hint"
+                    >Delete backups older than this many days</small
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="input-storage">Storage Mode</label>
+                  <select id="input-storage" class="form-control" disabled>
+                    <option value="local">Local Only</option>
+                    <option value="remote">Remote Only (S3)</option>
+                    <option value="both">Both (Local + S3)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="input-schedule">Backup Schedule (Cron)</label>
+                  <input
+                    type="text"
+                    id="input-schedule"
+                    class="form-control"
+                    placeholder="0 2 * * *"
+                    readonly
+                  />
+                  <small class="form-hint"
+                    >Format: minute hour day month weekday (e.g., "0 2 * * *" =
+                    2 AM daily)</small
+                  >
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    type="button"
+                    id="btn-save-backup-manual"
+                    class="btn btn-primary manual-save-btn"
+                    style="display: none"
+                  >
+                    Save Backup Config
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of config modal -->
+
+        <!-- Connection Modal -->
+        <div id="connection-modal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 id="connection-modal-title">Add Connection</h2>
+              <button class="modal-close" data-close-modal="connection-modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="connection-form" autocomplete="off">
+                <input type="hidden" id="conn-id" />
+                <div class="form-group">
+                  <label for="conn-type">Database Type</label>
+                  <select id="conn-type" class="form-control">
+                    <option value="postgres">PostgreSQL</option>
+                    <option value="mysql">MySQL</option>
+                    <option value="mongodb">MongoDB</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="conn-title">Title</label>
+                  <input
+                    type="text"
+                    id="conn-title"
+                    class="form-control"
+                    placeholder="Production API DB"
+                  />
+                  <small class="form-hint"
+                    >A readable name shown in the connection list</small
+                  >
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="conn-host">Host</label>
+                    <input
+                      type="text"
+                      id="conn-host"
+                      class="form-control"
+                      placeholder="db.example.com"
+                    />
+                  </div>
+                  <div class="form-group form-group-small">
+                    <label for="conn-port">Port</label>
+                    <input
+                      type="number"
+                      id="conn-port"
+                      class="form-control"
+                      placeholder="5432"
+                    />
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="conn-user">Username</label>
+                    <input type="text" id="conn-user" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label for="conn-password">Password</label>
+                    <div class="input-with-icon">
+                      <input
+                        type="password"
+                        id="conn-password"
+                        class="form-control"
+                        autocomplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        class="toggle-password"
+                        data-target="conn-password"
+                      >
+                        <svg
+                          class="eye-icon"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path
+                            d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <small class="form-hint" id="conn-password-hint"></small>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="conn-database">Database</label>
+                  <input type="text" id="conn-database" class="form-control" />
+                </div>
+
+                <!-- PostgreSQL options -->
+                <div class="conn-options" data-db-type="postgres">
+                  <div class="form-group">
+                    <label for="conn-pg-schema">Schema (Optional)</label>
+                    <input
+                      type="text"
+                      id="conn-pg-schema"
+                      class="form-control"
+                      placeholder="public"
+                    />
+                    <small class="form-hint"
+                      >Leave empty to backup all schemas</small
+                    >
+                  </div>
+                </div>
+
+                <!-- PostgreSQL / MySQL options -->
+                <div class="conn-options" data-db-type="postgres mysql">
+                  <div class="form-group">
+                    <label for="conn-exclude-tables"
+                      >Exclude Tables (Optional)</label
+                    >
+                    <input
+                      type="text"
+                      id="conn-exclude-tables"
+                      class="form-control"
+                      placeholder="migrations,sessions,cache"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="conn-ssl" />
+                      <span>Use SSL</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- MongoDB options -->
+                <div class="conn-options" data-db-type="mongodb">
+                  <div class="form-group">
+                    <label for="conn-auth-source">Auth Source</label>
+                    <input
+                      type="text"
+                      id="conn-auth-source"
+                      class="form-control"
+                      placeholder="admin"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="conn-exclude-collections"
+                      >Exclude Collections (Optional)</label
+                    >
+                    <input
+                      type="text"
+                      id="conn-exclude-collections"
+                      class="form-control"
+                      placeholder="logs,sessions"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="conn-tls" />
+                      <span>Use TLS</span>
+                    </label>
+                  </div>
+                  <div class="form-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="conn-srv" />
+                      <span>SRV record (mongodb+srv, e.g. Atlas)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" id="btn-test-connection" class="btn">
+                    Test Connection
+                  </button>
+                  <button
+                    type="submit"
+                    id="btn-save-connection"
+                    class="btn btn-primary"
+                  >
+                    Save Connection
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Restore Modal -->
+        <div id="restore-modal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Restore Backup</h2>
+              <button class="modal-close" data-close-modal="restore-modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="restore-target-id" />
+              <div class="form-group">
+                <label>Restore into</label>
+                <div id="restore-target-label" class="restore-target"></div>
+              </div>
+              <div class="form-group">
+                <label for="restore-source">Source connection</label>
+                <select id="restore-source" class="form-control"></select>
+                <small class="form-hint"
+                  >Only connections of the same database type are listed</small
+                >
+              </div>
+              <div class="form-group">
+                <label for="restore-file">Backup file</label>
+                <select id="restore-file" class="form-control"></select>
+              </div>
+              <div class="warning-box">
+                This will overwrite existing data in
+                <strong id="restore-target-warning"></strong>.
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn" data-close-modal="restore-modal">
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  id="btn-confirm-restore"
+                  class="btn btn-danger-solid"
+                >
+                  Restore
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Target Modal -->
+        <div id="upload-modal" class="modal">
+          <div class="modal-content modal-small">
+            <div class="modal-header">
+              <h2>Upload Backup File</h2>
+              <button class="modal-close" data-close-modal="upload-modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="upload-connection">Target connection</label>
+                <select id="upload-connection" class="form-control"></select>
+                <small class="form-hint" id="upload-accept-hint"></small>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn" data-close-modal="upload-modal">
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  id="btn-choose-upload-file"
+                  class="btn btn-primary"
+                >
+                  Choose File
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End of main-content -->
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>
+          © <span id="current-year"></span>
+          <a
+            href="https://github.com/khalidccnu"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            S.M. Khalid Mahmud</a
+          >. All rights reserved.
+        </p>
+      </footer>
+    </div>
+    <!-- End of container -->
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Application JavaScript -->
+    <script src="/js/app.js"></script>
+  </body>
+</html>
